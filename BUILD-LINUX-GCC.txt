@@ -1,0 +1,65 @@
+BUILDING SIGIL FROM SOURCE USING GCC IN LINUX
+---------------------------------------------
+
+SIGIL uses CMake to compile, so you will need to install it:
+
+	sudo apt-get install cmake
+
+Optionally, you may want to install a more visually-pleasing version of CMake. It's only really necessary when you run into CMake problems when trying to build SIGIL, so it's optional:
+
+	sudo-apt-get install cmake-curses-gui
+
+We depend on the OpenGL Extension Wrangler (GLEW) library:
+
+	sudo apt-get install libglew-dev
+
+We need OpenAL for audio:
+
+	sudo apt-get install libopenal-dev
+
+If you want to develop SIGIL applications using CodeBlocks, and want to use the CodeBlocks output console (such as in debug mode), you should install xterm, too:
+
+	sudo apt-get install xterm
+
+Next, we can download the SIGIL source code from GitLab.
+
+	cd ~/
+	sudo apt-get install git
+	git clone https://gitlab.com/geoff-nagy/sigil.git
+
+Navigate to SIGIL's root directory and type:
+
+    cd deps
+
+This is where CMake-based dependencies of SIGIL are located. We will use Git to acquire GLFW. (You can ignore the "pigu" and "freetype" folders.)
+
+Type the following:
+
+    git clone https://github.com/glfw/glfw.git
+
+Now back up into SIGIL's root directory and build everything:
+
+	cd ../
+	mkdir build-linux-gcc
+	cd build-linux-gcc
+	cmake ../
+	make
+	sudo make install
+
+Importantly, libsigil.so is installed by default into /usr/local/lib. If this directory is not part of your LD_LIBRARY_PATH variable, your SIGIL applications will not run since libsigil.so will not be found during runtime when it is normally loaded.
+
+One solution is to run the following command:
+
+	sudo nano ld.so.conf
+
+and add the line
+
+	/usr/local/lib
+
+to the file ld.so.conf. Then, close the file and run
+
+	sudo ldconfig
+
+and you should be good to go.
+
+And you're done! Example projects for every supported compiler are provided in the "examples" folder.
